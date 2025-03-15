@@ -2,7 +2,10 @@
   description = "NewDawn0's tmux config";
 
   inputs.utils.url = "github:NewDawn0/nixUtils";
-  outputs = { utils, ... }: {
+  outputs = { self, utils, ... }: {
+    overlays.default = final: prev: {
+      ansi = self.packages.${prev.system}.default;
+    };
     packages = utils.lib.eachSystem { } (pkgs:
       let
         tmuxPlugins = pkgs.symlinkJoin {
