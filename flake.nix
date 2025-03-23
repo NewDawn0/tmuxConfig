@@ -22,7 +22,7 @@
           ${pkgs.tmux}/bin/tmux
         '';
         tmuxFinal = pkgs.symlinkJoin {
-          name = "tmux-final";
+          name = "tmux";
           paths = [ tmuxBin tmuxCfg ];
         };
         # tmuxBin = pkgs.writeShellApplication {
