@@ -4,7 +4,7 @@
   inputs.utils.url = "github:NewDawn0/nixUtils";
   outputs = { self, utils, ... }: {
     overlays.default = final: prev: {
-      ansi = self.packages.${prev.system}.default;
+      ndtmux = self.packages.${prev.system}.default;
     };
     packages = utils.lib.eachSystem { } (pkgs:
       let
