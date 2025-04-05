@@ -9,7 +9,7 @@
     };
     packages = utils.lib.eachSystem { } (pkgs:
       let
-        plugins = with builtins; readDir ./plugins |> attrNames;
+        plugins = with builtins; attrNames (readDir ./plugins);
         tmuxPlugins = pkgs.stdenvNoCC.mkDerivation {
           name = "tmux-plugins";
           src = ./.;
@@ -30,7 +30,13 @@
       in {
         default = pkgs.writeShellApplication {
           name = "tmux";
-          text = "${pkgs.tmux}/bin/tmux -f ${tmuxCfg}/share/tmux.conf";
+          text = ''
+            if [ "$#" -eq 0 ]; then
+              ${pkgs.tmux}/bin/tmux -f ${tmuxCfg}/share/tmux.conf
+            else
+              ${pkgs.tmux}/bin/tmux "$@"
+            fi
+          '';
           meta = {
             description = "Fully setup runnable tmux configuration";
             homepage = "https://github.com/NewDawn0/tmuxConfig";
