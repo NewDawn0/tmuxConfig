@@ -30,12 +30,18 @@
       in {
         default = pkgs.writeShellApplication {
           name = "tmux";
+          runtimeInputs = [ pkgs.tmux ];
           text = ''
-            if [ "$#" -eq 0 ]; then
-              ${pkgs.tmux}/bin/tmux -f ${tmuxCfg}/share/tmux.conf
-            else
-              ${pkgs.tmux}/bin/tmux "$@"
-            fi
+            CONF="${tmuxCfg}/share/tmux.conf"
+            case "$1" in
+              # Only inject options conditonally
+              "" | attach* | new* | switch* | kill* | has* | run*)
+                ${pkgs.tmux}/bin/tmux -f "$CONF" "$@"
+                ;;
+              *)
+                ${pkgs.tmux}/bin/tmux "$@"
+                ;;
+            esac
           '';
           meta = {
             description = "Fully setup runnable tmux configuration";
