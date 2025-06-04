@@ -33,15 +33,17 @@
           runtimeInputs = [ pkgs.tmux ];
           text = ''
             CONF="${tmuxCfg}/share/tmux.conf"
-            case "$1" in
-              # Only inject options conditonally
-              "" | attach* | new* | switch* | kill* | has* | run*)
-                ${pkgs.tmux}/bin/tmux -f "$CONF" "$@"
-                ;;
-              *)
-                ${pkgs.tmux}/bin/tmux "$@"
-                ;;
-            esac
+            if [ -z "$1" ]; then
+              case "$1" in
+                # Only inject options conditonally
+                "" | attach* | new* | switch* | kill* | has* | run*)
+                  ${pkgs.tmux}/bin/tmux -f "$CONF" "$@"
+                  ;;
+                *)
+                  ${pkgs.tmux}/bin/tmux "$@"
+                  ;;
+              esac
+            fi
           '';
           meta = {
             description = "Fully setup runnable tmux configuration";
